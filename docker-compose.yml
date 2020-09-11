@@ -9,8 +9,8 @@ services:
         ports:
             - '3306:3306'
         environment:
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_ROOT_PASSWORD=IprOMASHaRYWAVAUREAc
+            - MYSQL_DATABASE=front_acc_db
         volumes:
             - /opt/fa/data:/var/lib/mysql
         networks:
@@ -22,12 +22,14 @@ services:
             - fa_db
         image: genebarker/frontaccounting
         container_name: front_acc
-        command: ["-O", "--http"]
+        command: ["--http"]
         build: .
         restart: always
+        volumes:
+            - /opt/fa/web_app:/var/www/html
+            - /opt/fa/ssl:/etc/ssl 
         ports:
             - '8085:80'
-            - '8086:443'
         networks:
             fa_network:
                 aliases:
