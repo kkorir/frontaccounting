@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+    fa_db:
+        image: mysql:5.6
+        restart: always
+        container_name: fa_db
+        command: --default-authentication-plugin=mysql_native_password
+        ports:
+            - '3306:3306'
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+        volumes:
+            - /opt/fa/data:/var/lib/mysql
+        networks:
+            fa_network:
+                aliases:
+                    - fa_db   
+    front_acc:
+        depends_on:
+            - fa_db
+        image: genebarker/frontaccounting
+        container_name: front_acc
+        command: ["-O", "--http"]
+        build: .
+        restart: always
+        ports:
+            - '8085:80'
+            - '8086:443'
+        networks:
+            fa_network:
+                aliases:
+                    - fa_app
+networks:
+    fa_network: 
+        driver: bridge
